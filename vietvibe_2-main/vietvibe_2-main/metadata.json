@@ -1,0 +1,6 @@
+{
+  "name": "VietVibe - Việt Phục AI Stylist",
+  "description": "Nền tảng khám phá di sản Việt phục, AI Stylist gợi ý phối đồ, kiểm tra tính phù hợp văn hóa và thử đồ ảo AI Virtual Try-on.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
