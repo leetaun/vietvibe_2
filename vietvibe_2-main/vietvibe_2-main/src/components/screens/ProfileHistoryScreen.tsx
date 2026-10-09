@@ -1,9 +1,10 @@
 import React,{useState} from 'react';
-import {ArrowLeft,X} from 'lucide-react';
+import {X} from 'lucide-react';
+import {BackButton} from '../common/Header';
 import {UserProfile,UserHistoryItem} from '../../types/vietvibe';
 import {CULTURAL_COSTUMES} from '../../data/mockData';
 import {CostumeImage,ReferenceImage} from '../common/CulturalVisual';
-interface ProfileHistoryScreenProps {user:UserProfile;history:UserHistoryItem[];onDeleteHistory:(id:string)=>void;onReopenHistory:(item:UserHistoryItem)=>void;onLogout:()=>void;onUpdateProfile:(name:string,email:string)=>void;onBack?:()=>void;onOpenAdmin?:()=>void;}
+interface ProfileHistoryScreenProps {user:UserProfile;history:UserHistoryItem[];onDeleteHistory:(id:string)=>void;onReopenHistory:(item:UserHistoryItem)=>void;onLogout:()=>void;onUpdateProfile:(name:string,email:string)=>void;onBack:()=>void;onOpenAdmin?:()=>void;}
 export const ProfileHistoryScreen:React.FC<ProfileHistoryScreenProps>=({user,history,onDeleteHistory,onReopenHistory,onLogout,onUpdateProfile,onBack,onOpenAdmin})=>{
  const [tab,setTab]=useState('history');
  const [editing,setEditing]=useState(false);
@@ -11,7 +12,7 @@ export const ProfileHistoryScreen:React.FC<ProfileHistoryScreenProps>=({user,his
  const [email,setEmail]=useState(user.email);
  const [notice,setNotice]=useState('');
  return <div className="vv-screen">
-  <div className="vv-topbar"><button className="vv-note flex gap-1 items-center" onClick={onBack}><ArrowLeft size={14}/>Trang chủ</button><h1>Màn hình Hồ sơ &amp; Lịch sử</h1><span className="text-sm">Việt Phục AI Stylist</span></div>
+  <div className="vv-topbar"><BackButton onBack={onBack}/><h1>Màn hình Hồ sơ &amp; Lịch sử</h1><span className="text-sm">VietVibe</span></div>
   <div className="vv-profile-grid">
    <section><h2 className="text-lg font-semibold mb-3">HỒ SƠ CỦA TÔI</h2><div className="vv-profile-card">
     <div className="vv-avatar"><ReferenceImage file="profile-reference.png" crop={[159,151,101,100]} className="h-full w-full" label="Ảnh đại diện mẫu"/></div>

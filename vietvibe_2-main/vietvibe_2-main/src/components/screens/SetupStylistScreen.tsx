@@ -3,11 +3,11 @@ import { Sparkles } from 'lucide-react';
 import { EVENT_OPTIONS, STYLE_OPTIONS, COLOR_PALETTES, CULTURAL_COSTUMES } from '../../data/mockData';
 import { CulturalCardData, AIStatus } from '../../types/vietvibe';
 import { ReferenceImage } from '../common/CulturalVisual';
-import { ScreenBrand, AIConnectionNotice } from '../common/Header';
+import { ScreenNavigation, AIConnectionNotice } from '../common/Header';
 
 interface SetupStylistScreenProps {
   initialCostume?: CulturalCardData | null;
-  onBack?: () => void;
+  onBack: () => void;
   aiStatus: AIStatus;
   onRefreshAI: () => void;
   onGenerateOutfit: (config: { event: string; style: string; colorHex: string; colorName: string; notes: string; costumeId: string }) => Promise<void>;
@@ -39,9 +39,9 @@ export const SetupStylistScreen: React.FC<SetupStylistScreenProps> = ({ initialC
   };
   return <div className="vv-screen vv-setup">
     <div>
-      <ScreenBrand onClick={onBack} />
+      <ScreenNavigation onBack={onBack} />
       <div className="vv-setup-intro">
-        <h1>AI VIỆT PHỤC<br/> STYLIST</h1>
+        <h1>VietVibe</h1>
         <p>Thiết lập bối cảnh và sở thích để AI đề xuất outfit phù hợp nhất cho bạn</p>
         <details className="mt-6 text-[11px] text-[#A4A69C]">
           <summary>Trang phục cơ sở: {CULTURAL_COSTUMES.find(item=>item.id===selectedCostumeId)?.name}</summary>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RotateCw, ZoomIn, Image, Check, Plus } from 'lucide-react';
 import { CostumeImage, ReferenceImage } from '../common/CulturalVisual';
-import { ScreenBrand } from '../common/Header';
+import { ScreenNavigation } from '../common/Header';
 import { AVAILABLE_ACCESSORIES, COLOR_PALETTES, CULTURAL_COSTUMES } from '../../data/mockData';
 import { OutfitComponentSelection } from '../../types/vietvibe';
 interface OutfitBuilderScreenProps {
@@ -11,7 +11,7 @@ interface OutfitBuilderScreenProps {
   onProceedToCulturalCheck:(outfit:OutfitComponentSelection)=>void;
   onProceedToTryOn:(outfit:OutfitComponentSelection)=>void;
   onSaveOutfitToDraft:(outfit:OutfitComponentSelection)=>void;
-  onBack?:()=>void;
+  onBack:()=>void;
 }
 export const OutfitBuilderScreen: React.FC<OutfitBuilderScreenProps> = ({ initialConfig, initialOutfit, aiExplanation, onProceedToCulturalCheck, onProceedToTryOn, onSaveOutfitToDraft, onBack }) => {
   const [costumeId,setCostumeId]=useState(CULTURAL_COSTUMES.find(item=>item.name===initialOutfit?.mainGarment)?.id||initialConfig?.costumeId||'ao-tac');
@@ -38,7 +38,7 @@ export const OutfitBuilderScreen: React.FC<OutfitBuilderScreenProps> = ({ initia
   ];
   const accessoryCrops:Record<string,[number,number,number,number]>={'acc-fan':[738,274,60,60],'acc-khanh':[827,274,60,60],'acc-tui-gam':[916,274,60,60],'acc-vong-co':[738,370,60,60],'acc-tram':[827,370,60,60]};
   return <div className="vv-screen vv-builder">
-    <div className="vv-topbar"><ScreenBrand onClick={onBack}/><h1>AI GỢI Ý &amp; TÙY CHỈNH OUTFIT</h1></div>
+    <div className="vv-topbar"><ScreenNavigation onBack={() => { onSaveOutfitToDraft(outfit); onBack(); }}/><h1>AI GỢI Ý &amp; TÙY CHỈNH OUTFIT</h1></div>
     <div className="vv-builder-grid">
       <section className="vv-panel"><h2 className="vv-panel-title">Lựa chọn &amp; Thành phần</h2>
         {rows.map(row=><div key={row.label} className="vv-component">

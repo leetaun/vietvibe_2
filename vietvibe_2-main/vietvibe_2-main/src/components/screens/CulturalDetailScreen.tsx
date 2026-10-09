@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ZoomIn, Compass, AlertCircle } from 'lucide-react';
+import { ZoomIn, AlertCircle } from 'lucide-react';
+import { ScreenNavigation } from '../common/Header';
 import { CulturalCardData } from '../../types/vietvibe';
 import { CulturalVisual } from '../common/CulturalVisual';
 
@@ -95,30 +96,13 @@ export const CulturalDetailScreen: React.FC<CulturalDetailScreenProps> = ({
   return (
     <div className="space-y-7 pb-6">
       {/* Thanh tiêu đề riêng */}
-      <div className="flex h-14 items-center justify-between gap-3 border-b border-white/10">
-        <button
-          type="button"
-          onClick={onBack}
-          className="flex items-center gap-2 text-[#D8C18D] hover:text-white"
-        >
-          <ArrowLeft className="h-5 w-5" />
-          <span className="text-[14px] font-semibold sm:text-[20px]">
-            Việt Phục AI Stylist
-          </span>
-        </button>
+      <div className="flex min-h-14 flex-wrap items-center justify-between gap-3 border-b border-white/10 py-2">
+        <ScreenNavigation onBack={onBack} />
 
         <span className="hidden text-[18px] font-medium text-white sm:block">
           Màn hình Chi tiết
         </span>
 
-        <button
-          type="button"
-          onClick={onBack}
-          className="flex items-center gap-1.5 rounded-xl border border-[#D8C18D] px-3 py-1.5 text-[13px] text-[#D8C18D] hover:bg-[#D8C18D]/10"
-        >
-          <Compass className="h-4 w-4" />
-          Khám phá
-        </button>
       </div>
 
       {/* Ảnh bên trái, thông tin bên phải */}

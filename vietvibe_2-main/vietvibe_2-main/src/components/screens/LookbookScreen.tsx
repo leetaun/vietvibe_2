@@ -1,8 +1,9 @@
 import React,{useState} from 'react';
-import {Search,X,ArrowLeft,Images} from 'lucide-react';
+import {Search,X,Images} from 'lucide-react';
+import {BackButton} from '../common/Header';
 import {LookbookAlbum} from '../../types/vietvibe';
 import {ReferenceImage,CostumeImage} from '../common/CulturalVisual';
-interface LookbookScreenProps {albums:LookbookAlbum[];onCreateAlbum:(album:LookbookAlbum)=>void;onUpdateAlbum?:(album:LookbookAlbum)=>void;isLoggedIn:boolean;onOpenAuth:()=>void;onBack?:()=>void;}
+interface LookbookScreenProps {albums:LookbookAlbum[];onCreateAlbum:(album:LookbookAlbum)=>void;onUpdateAlbum?:(album:LookbookAlbum)=>void;isLoggedIn:boolean;onOpenAuth:()=>void;onBack:()=>void;}
 export const LookbookScreen:React.FC<LookbookScreenProps>=({albums,onCreateAlbum,onUpdateAlbum,isLoggedIn,onOpenAuth,onBack})=>{
  const [filter,setFilter]=useState('Tất cả');
  const [query,setQuery]=useState('');
@@ -20,7 +21,7 @@ export const LookbookScreen:React.FC<LookbookScreenProps>=({albums,onCreateAlbum
  const save=(event:React.FormEvent)=>{event.preventDefault();if(!title.trim())return;const album:LookbookAlbum=editing?{...editing,title:title.trim(),description:description.trim(),occasion}:{id:'lb-'+Date.now(),title:title.trim(),description:description.trim(),occasion,outfitCount:0,coverImageTheme:'#16385C',tags:[occasion],outfits:[]};if(editing){onUpdateAlbum?.(album);setSelected(album);}else onCreateAlbum(album);setFormOpen(false);};
  const share=async(album:LookbookAlbum)=>{try{await navigator.clipboard.writeText(album.title+'\n'+album.description+'\n'+album.outfits.map(item=>item.name).join('\n'));setNotice('Đã sao chép thông tin album.');}catch{setNotice('Trình duyệt chưa cho phép sao chép.');}};
  return <div className="vv-screen">
-  <div className="vv-topbar"><div><button className="vv-note flex items-center gap-1 mb-2" onClick={onBack}><ArrowLeft size={13}/>Trang chủ</button><h1 className="!font-sans !text-white">LOOKBOOK CỦA TÔI</h1></div><button className="vv-gold" onClick={()=>openForm()}>TẠO LOOKBOOK MỚI</button></div>
+  <div className="vv-topbar"><div><div className="mb-2"><BackButton onBack={onBack}/></div><h1 className="!font-sans !text-white">LOOKBOOK CỦA TÔI</h1></div><button className="vv-gold" onClick={()=>openForm()}>TẠO LOOKBOOK MỚI</button></div>
   <div className="flex flex-wrap justify-between gap-3 mb-4"><div className="flex flex-wrap gap-2">{tabs.map(tab=><button key={tab} className="vv-chip" aria-pressed={filter===tab} onClick={()=>setFilter(tab)}>{tab}</button>)}</div><label className="relative"><Search size={14} className="absolute left-2 top-2.5 text-[#B5B6AD]"/><input className="vv-field pl-7 !w-[190px]" aria-label="Tìm Lookbook" placeholder="Tìm album..." value={query} onChange={event=>setQuery(event.target.value)}/></label></div>
   <div className="vv-lookbook-grid">{shown.map(album=><article className="vv-album" key={album.id}>
    <button className="vv-album-cover" onClick={()=>setSelected(album)} aria-label={'Xem album '+album.title}>
