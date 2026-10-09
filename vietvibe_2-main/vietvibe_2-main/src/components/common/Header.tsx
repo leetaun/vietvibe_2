@@ -1,13 +1,5 @@
 import React from 'react';
 import { ArrowLeft, Search, Bell, LogIn } from 'lucide-react';
-import { type AIStatus } from '../../types/vietvibe';
-
-export const AIConnectionNotice: React.FC<{ status: AIStatus; onRefresh: () => void }> = ({ status, onRefresh }) => (
-  <div className="vv-note flex flex-wrap items-center justify-end gap-2" role="status">
-    <span>{status.checking ? 'Đang kiểm tra cấu hình AI…' : status.configured ? 'Đã cấu hình key Gemini.' : status.backendAvailable ? 'Dán GEMINI_API_KEY vào .env.local rồi lưu file.' : 'Dừng npm run dev cũ và chạy lại npm.cmd run dev để bật server AI.'}</span>
-    <button type="button" className="underline" disabled={status.checking} onClick={onRefresh}>Kiểm tra lại</button>
-  </div>
-);
 
 export const ScreenBrand: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
   <button type="button" className="vv-wordmark" onClick={onClick} aria-label="VietVibe">

@@ -1,18 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ScreenNavigation, AIConnectionNotice } from '../common/Header';
+import { ScreenNavigation } from '../common/Header';
 import { CostumeImage, ReferenceImage } from '../common/CulturalVisual';
 import { CULTURAL_COSTUMES } from '../../data/mockData';
 import { type OutfitComponentSelection, type AIStatus, type CulturalAssessment } from '../../types/vietvibe';
 interface CulturalCheckScreenProps {
   outfit: OutfitComponentSelection;
   aiStatus: AIStatus;
-  onRefreshAI: () => void;
   onAnalyze: (signal?: AbortSignal) => Promise<CulturalAssessment>;
   onAutoFix: (outfit?: OutfitComponentSelection) => void;
   onProceedAnyway: () => void;
   onBackToBuilder: () => void;
 }
-export const CulturalCheckScreen: React.FC<CulturalCheckScreenProps> = ({ outfit, aiStatus, onRefreshAI, onAnalyze, onAutoFix, onProceedAnyway, onBackToBuilder }) => {
+export const CulturalCheckScreen: React.FC<CulturalCheckScreenProps> = ({ outfit, aiStatus, onAnalyze, onAutoFix, onProceedAnyway, onBackToBuilder }) => {
   const [assessment, setAssessment] = useState<CulturalAssessment | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -59,7 +58,6 @@ export const CulturalCheckScreen: React.FC<CulturalCheckScreenProps> = ({ outfit
         </>}
         {error && <p role="alert" className="text-xs text-red-300">{error}</p>}
         <button className="vv-gold w-full" disabled={busy || !aiStatus.configured} onClick={analyze}>{busy ? 'GEMINI ĐANG NHẬN XÉT…' : assessment ? 'NHẬN XÉT LẠI BẰNG AI' : 'AI NHẬN XÉT BỘ PHỐI'}</button>
-        <AIConnectionNotice status={aiStatus} onRefresh={onRefreshAI}/>
         <button className="vv-outline w-full" disabled={busy} onClick={onProceedAnyway}>{conflict ? 'TIẾP TỤC VỚI BỘ PHỐI HIỆN TẠI' : 'TIẾP TỤC THỬ ĐỒ'}</button>
       </section>
     </div>

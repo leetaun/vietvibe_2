@@ -464,7 +464,6 @@ export default function App() {
             onBack={handleBack}
             initialCostume={selectedCostume}
             aiStatus={aiStatus}
-            onRefreshAI={refreshAIStatus}
             onGenerateOutfit={handleGeminiStylist}
             onPreviewOutfit={handleGenerateOutfitFromSetup}
           />
@@ -491,7 +490,6 @@ export default function App() {
           <CulturalCheckScreen
             outfit={currentOutfit}
             aiStatus={aiStatus}
-            onRefreshAI={refreshAIStatus}
             onAnalyze={handleAnalyzeOutfit}
             onAutoFix={handleAutoFixCulturalConflicts}
             onProceedAnyway={handleProceedAfterCulturalCheck}
@@ -504,7 +502,6 @@ export default function App() {
           <TryOnScreen
             onBack={handleBack}
             aiStatus={aiStatus}
-            onRefreshAI={refreshAIStatus}
             onExecuteTryOn={handleGeminiTryOn}
             onPreviewTryOn={handleExecuteTryOn}
           />

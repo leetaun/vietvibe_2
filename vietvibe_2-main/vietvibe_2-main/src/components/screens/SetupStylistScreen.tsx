@@ -3,17 +3,16 @@ import { Check, Sparkles } from 'lucide-react';
 import { EVENT_OPTIONS, STYLE_OPTIONS, COLOR_PALETTES, CULTURAL_COSTUMES } from '../../data/mockData';
 import { CulturalCardData, AIStatus } from '../../types/vietvibe';
 import { CostumeImage, ReferenceImage } from '../common/CulturalVisual';
-import { ScreenNavigation, AIConnectionNotice } from '../common/Header';
+import { ScreenNavigation } from '../common/Header';
 
 interface SetupStylistScreenProps {
   initialCostume?: CulturalCardData | null;
   onBack: () => void;
   aiStatus: AIStatus;
-  onRefreshAI: () => void;
   onGenerateOutfit: (config: { event: string; style: string; colorHex: string; colorName: string; notes: string; costumeId: string }) => Promise<void>;
   onPreviewOutfit: (config: { event: string; style: string; colorHex: string; colorName: string; notes: string; costumeId: string }) => void;
 }
-export const SetupStylistScreen: React.FC<SetupStylistScreenProps> = ({ initialCostume, onBack, onGenerateOutfit, onPreviewOutfit, aiStatus, onRefreshAI }) => {
+export const SetupStylistScreen: React.FC<SetupStylistScreenProps> = ({ initialCostume, onBack, onGenerateOutfit, onPreviewOutfit, aiStatus }) => {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [selectedEvent, setSelectedEvent] = useState(EVENT_OPTIONS[0].id);
@@ -85,7 +84,6 @@ export const SetupStylistScreen: React.FC<SetupStylistScreenProps> = ({ initialC
       </section>
       {error && <p role="alert" className="text-xs text-red-300">{error}</p>}
       <div className="vv-setup-actions"><button type="button" className="vv-outline" disabled={busy} onClick={() => generate(true)}>Xem bản phối mẫu</button><button type="button" className="vv-gold flex items-center justify-center gap-2" disabled={busy || !aiStatus.configured} onClick={() => generate()}><Sparkles size={17} aria-hidden="true" />{busy ? 'Gemini đang gợi ý…' : 'Tạo gợi ý phối đồ'}</button></div>
-      <AIConnectionNotice status={aiStatus} onRefresh={onRefreshAI}/>
       </div>
     </div>
   </div>;

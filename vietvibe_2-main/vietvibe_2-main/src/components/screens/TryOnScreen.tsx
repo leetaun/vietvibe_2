@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Check, Image as ImageIcon, Lightbulb, Plus, Sparkles, UploadCloud, X } from 'lucide-react';
-import { ScreenNavigation, AIConnectionNotice } from '../common/Header';
+import { ScreenNavigation } from '../common/Header';
 import { type AIStatus } from '../../types/vietvibe';
 import { ReferenceImage } from '../common/CulturalVisual';
 
@@ -9,10 +9,9 @@ interface TryOnScreenProps {
   onPreviewTryOn: (image: string, customAccessoryName?: string) => void;
   onBack: () => void;
   aiStatus: AIStatus;
-  onRefreshAI: () => void;
 }
 
-export const TryOnScreen: React.FC<TryOnScreenProps> = ({ onExecuteTryOn, onPreviewTryOn, onBack, aiStatus, onRefreshAI }) => {
+export const TryOnScreen: React.FC<TryOnScreenProps> = ({ onExecuteTryOn, onPreviewTryOn, onBack, aiStatus }) => {
   const [busy, setBusy] = useState(false);
   const [image, setImage] = useState<string | null>(null);
   const [demo, setDemo] = useState(0);
@@ -93,7 +92,6 @@ export const TryOnScreen: React.FC<TryOnScreenProps> = ({ onExecuteTryOn, onPrev
           <button type="button" className="vv-gold" disabled={busy || !aiStatus.configured} onClick={execute}><Sparkles size={17} />{busy ? 'Gemini đang tạo ảnh…' : 'Thử đồ bằng AI'}</button>
           <button type="button" className="vv-outline" disabled={busy} onClick={() => onPreviewTryOn(image || 'face-' + (demo + 1), accessory || undefined)}>Xem trước giao diện kết quả</button>
           <p className="vv-tryon-privacy">Khi bấm thử đồ, ảnh người, trang phục và phụ kiện đã chọn sẽ được gửi tới Google Gemini để tạo ảnh.</p>
-          <AIConnectionNotice status={aiStatus} onRefresh={onRefreshAI} />
         </section>
       </aside>
     </div>

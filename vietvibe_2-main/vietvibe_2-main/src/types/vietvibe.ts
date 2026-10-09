@@ -45,7 +45,7 @@ export const OUTFIT_CHOICES = {
   innerRobe: ['Bạch y (Cổ trắng)', 'Áo lót kem', 'Áo lót xanh'],
   pantsOrSkirt: ['Quần lụa trắng', 'Quần lụa đen', 'Váy lụa'],
   headwear: ['Mấn xanh thời Nguyễn', 'Khăn đóng', 'Mấn đỏ', 'Không dùng'],
-  footwear: ['Hài thêu hoa sen', 'Guốc mộc', 'Giày thể thao Sneaker'],
+  footwear: ['Hài thêu hoa sen', 'Guốc mộc', 'Giày thể thao Sneaker', 'Không dùng'],
 } as const;
 export const ACCESSORY_IDS = ['acc-fan', 'acc-khanh', 'acc-tui-gam', 'acc-vong-co', 'acc-tram', 'acc-man-xanh', 'acc-hai-theu', 'acc-guoc-moc', 'acc-sneaker', 'acc-sunglasses'] as const;
 export interface CulturalAssessment {
