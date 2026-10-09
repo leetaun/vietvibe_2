@@ -380,7 +380,7 @@ export default function App() {
       className="vv-app min-h-screen text-slate-100 flex flex-col selection:bg-amber-500/30 selection:text-amber-200"
       style={{
         backgroundColor:
-          currentTab === 'tryon_result' ? '#F8F8F6' : currentTab === 'tryon' ? '#E5E5E5' : isStandaloneScreen ? '#11110F' : '#0B131E',
+          currentTab === 'tryon_result' ? '#F8F8F6' : isStandaloneScreen ? '#11110F' : '#0B131E',
       }}
     >
       {/* 1. Header (Sticky Top Bar) */}
@@ -419,6 +419,8 @@ export default function App() {
         className={`flex-1 w-full mx-auto ${
           currentTab === 'cultural_detail'
             ? 'max-w-[1024px] px-4 sm:px-8 pt-0'
+            : ['stylist_setup', 'lookbook', 'profile', 'tryon'].includes(currentTab)
+              ? 'max-w-[1440px] px-0 pt-0'
             : isStandaloneScreen
               ? 'max-w-[1024px] px-0 pt-0'
             : currentTab === 'home'
