@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 import { EVENT_OPTIONS, STYLE_OPTIONS, COLOR_PALETTES, CULTURAL_COSTUMES } from '../../data/mockData';
 import { CulturalCardData, AIStatus } from '../../types/vietvibe';
-import { ReferenceImage } from '../common/CulturalVisual';
+import { CostumeImage, ReferenceImage } from '../common/CulturalVisual';
 import { ScreenNavigation, AIConnectionNotice } from '../common/Header';
 
 interface SetupStylistScreenProps {
@@ -21,6 +21,7 @@ export const SetupStylistScreen: React.FC<SetupStylistScreenProps> = ({ initialC
   const [selectedColor, setSelectedColor] = useState(COLOR_PALETTES[0].hex);
   const [userNotes, setUserNotes] = useState('');
   const [selectedCostumeId, setSelectedCostumeId] = useState(initialCostume?.id || 'ao-tac');
+  const activeCostume = CULTURAL_COSTUMES.find(item => item.id === selectedCostumeId) || CULTURAL_COSTUMES[0];
   const imageX: Record<string, number> = { tet:410, 'ky-yeu':529, 'cuoi-hoi':647, 'le-hoi':766, 'dao-pho':884 };
   const bands: Record<string,string> = {
     'c-red':'linear-gradient(90deg,#58140F 0% 30%,#74201A 30% 65%,#943027 65%)',
@@ -38,43 +39,54 @@ export const SetupStylistScreen: React.FC<SetupStylistScreenProps> = ({ initialC
     finally { setBusy(false); }
   };
   return <div className="vv-screen vv-setup">
-    <div>
-      <ScreenNavigation onBack={onBack} />
-      <div className="vv-setup-intro">
-        <h1>VietVibe</h1>
-        <p>Thiết lập bối cảnh và sở thích để AI đề xuất outfit phù hợp nhất cho bạn</p>
-        <details className="mt-6 text-[11px] text-[#A4A69C]">
-          <summary>Trang phục cơ sở: {CULTURAL_COSTUMES.find(item=>item.id===selectedCostumeId)?.name}</summary>
-          <select aria-label="Trang phục cơ sở" className="vv-field mt-2" value={selectedCostumeId} onChange={event=>setSelectedCostumeId(event.target.value)}>
-            {CULTURAL_COSTUMES.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
-          </select>
-        </details>
-      </div>
-    </div>
-    <div className="vv-setup-form">
-      <h2>Màn hình Thiết lập phối đồ / <span className="font-normal text-[#D8C18D]">AI Stylist Setup Screen</span></h2>
-      <section className="vv-step"><h3>+ Bước 1: Chọn sự kiện / Bối cảnh</h3>
+    <ScreenNavigation onBack={onBack} />
+    <header className="vv-page-heading">
+      <span className="vv-eyebrow"><Sparkles size={14} aria-hidden="true" /> PHONG CÁCH CỦA BẠN</span>
+      <h1>AI Stylist</h1>
+      <p>Chọn bối cảnh, phong cách và sắc màu. VietVibe giúp bạn tạo một bản phối mang dấu ấn riêng.</p>
+    </header>
+    <div className="vv-setup-layout">
+      <aside className="vv-setup-intro">
+        <div className="vv-setup-costume-art">
+          <CostumeImage costumeId={activeCostume.id} fit="contain" className="h-full w-full" />
+          <span className="vv-setup-costume-badge">TRANG PHỤC CƠ SỞ</span>
+        </div>
+        <div className="vv-setup-costume-info">
+          <h2>{activeCostume.name}</h2>
+          <p>{activeCostume.dynasty === 'Chưa xác định' ? 'Cảm hứng từ trang phục Việt' : 'Trang phục triều ' + activeCostume.dynasty}</p>
+          <label className="block mt-5 text-xs text-[#B5B6AD]">
+            Chọn trang phục để phối
+            <select className="vv-field mt-2" value={selectedCostumeId} onChange={event=>setSelectedCostumeId(event.target.value)}>
+              {CULTURAL_COSTUMES.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+            </select>
+          </label>
+          <div className="vv-setup-tip"><Sparkles size={18} aria-hidden="true" /><p>Một chút cảm hứng truyền thống, một chút cá tính của bạn.</p></div>
+        </div>
+      </aside>
+      <div className="vv-setup-form">
+      <section className="vv-step"><h2><span className="vv-step-number">01</span> Bạn sẽ mặc trong dịp nào?</h2>
         <div className="vv-events">{EVENT_OPTIONS.map(item=><button key={item.id} type="button" className="vv-event" aria-pressed={selectedEvent===item.id} onClick={()=>setSelectedEvent(item.id)}>
           <ReferenceImage file="setup-reference.png" crop={[imageX[item.id],94,89,84]} className="vv-event-art" />
-          {item.label}
+          <span>{item.label}</span>
+          {selectedEvent===item.id && <span className="vv-event-check"><Check size={13} aria-hidden="true" /></span>}
         </button>)}</div>
       </section>
-      <section className="vv-step"><h3>+ Bước 2: Chọn phong cách của bạn</h3>
+      <section className="vv-step"><h2><span className="vv-step-number">02</span> Phong cách bạn yêu thích</h2>
         <div className="vv-styles">{[STYLE_OPTIONS[0],STYLE_OPTIONS[2],STYLE_OPTIONS[1],STYLE_OPTIONS[3]].map(item=><button key={item.id} type="button" className="vv-style" aria-pressed={selectedStyle===item.id} onClick={()=>setSelectedStyle(item.id)}>{item.label}</button>)}</div>
       </section>
-      <section className="vv-step"><h3>+ Bước 3: Chọn tông màu ưa thích</h3>
-        <p className="vv-note mb-2">Color palette để người dùng click nhanh:</p>
+      <section className="vv-step"><h2><span className="vv-step-number">03</span> Sắc màu của bản phối</h2>
         <div className="vv-palettes">{COLOR_PALETTES.slice(0,5).map(item=><button key={item.id} type="button" aria-pressed={selectedColor===item.hex} onClick={()=>setSelectedColor(item.hex)}>
-          <span className="vv-palette" style={{background:bands[item.id]}} />{item.name}
+          <span className="vv-palette" style={{background:bands[item.id]}}>{selectedColor===item.hex && <span className="vv-palette-check"><Check size={13} aria-hidden="true" /></span>}</span><span>{item.name}</span>
         </button>)}</div>
       </section>
       <section className="vv-step">
-        <label htmlFor="stylist-notes" className="block text-sm mb-2">+ Bước 4 (Tùy chọn): Thêm ghi chú hoặc yêu cầu đặc biệt</label>
-        <textarea id="stylist-notes" rows={2} className="vv-field resize-y bg-transparent" value={userNotes} onChange={event=>setUserNotes(event.target.value)} placeholder="Ví dụ: Em muốn phối thêm mấn và quạt cầm tay..." />
+        <label htmlFor="stylist-notes" className="vv-notes-label"><span className="vv-step-number">04</span> Thêm mong muốn của bạn <span className="vv-optional">Tùy chọn</span></label>
+        <textarea id="stylist-notes" rows={3} className="vv-field resize-y" value={userNotes} onChange={event=>setUserNotes(event.target.value)} placeholder="Ví dụ: Mình muốn phối thêm mấn và quạt cầm tay…" />
       </section>
       {error && <p role="alert" className="text-xs text-red-300">{error}</p>}
-      <div className="flex justify-end gap-2 flex-wrap"><button type="button" className="vv-outline" disabled={busy} onClick={() => generate(true)}>XEM BẢN PHỐI MẪU</button><button type="button" className="vv-gold flex items-center gap-1" disabled={busy || !aiStatus.configured} onClick={() => generate()}>{busy ? 'GEMINI ĐANG GỢI Ý…' : 'AI TẠO GỢI Ý PHỐI ĐỒ'} <Sparkles size={15}/></button></div>
+      <div className="vv-setup-actions"><button type="button" className="vv-outline" disabled={busy} onClick={() => generate(true)}>Xem bản phối mẫu</button><button type="button" className="vv-gold flex items-center justify-center gap-2" disabled={busy || !aiStatus.configured} onClick={() => generate()}><Sparkles size={17} aria-hidden="true" />{busy ? 'Gemini đang gợi ý…' : 'Tạo gợi ý phối đồ'}</button></div>
       <AIConnectionNotice status={aiStatus} onRefresh={onRefreshAI}/>
+      </div>
     </div>
   </div>;
 };
