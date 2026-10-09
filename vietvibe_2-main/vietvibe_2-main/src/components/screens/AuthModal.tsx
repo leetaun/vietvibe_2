@@ -59,7 +59,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             VietVibe
           </h2>
           <p className="text-xs text-amber-300 font-serif-culture">
-            Việt Phục AI Stylist · Di Sản Vượt Thời Gian
+            VietVibe · Di Sản Vượt Thời Gian
           </p>
 
           {pendingActionNote && (

@@ -49,16 +49,16 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
     'ao-ngu-than-nu': '74.41% 45.98%',
   };
   return (
-    <div className="mx-auto w-full max-w-[856px] space-y-5 pb-8">
-      {/* 1. SEARCH BAR - Faithfully matching PDF Page 2 */}
-      <div className="relative mx-auto w-full max-w-[500px]">
+    <div className="mx-auto w-full space-y-6 pb-10 lg:space-y-8">
+      {/* 1. Search */}
+      <div className="relative mx-auto w-full max-w-[720px]">
         <div className="relative">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm kiếm Việt phục, thời kỳ, phụ kiện..."
-            className="h-9 w-full rounded-md border border-[#47515E] bg-[#2C3541] pl-9 pr-14 text-[12px] text-slate-100 placeholder:text-[#A8ADB5] focus:border-[#D8C18D] focus:outline-none"
+            className="h-11 w-full rounded-lg border border-[#47515E] bg-[#2C3541] pl-10 pr-14 text-sm text-slate-100 placeholder:text-[#A8ADB5] focus:border-[#D8C18D] focus:outline-none"
           />
           <Search
             aria-hidden="true"
@@ -76,7 +76,7 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
       </div>
 
       {/* 2. Filters */}
-      <div className="grid grid-cols-1 gap-4 md:ml-auto md:max-w-[670px] md:grid-cols-[1.2fr_1.3fr_0.8fr]">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-[1fr_1.5fr_0.8fr] lg:gap-8">
         {[
           {
             label: 'Thời kỳ',
@@ -97,19 +97,19 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
             setValue: setSelectedGender,
           },
         ].map((group) => (
-          <div key={group.label} className="min-w-0 space-y-2">
-            <h2 className="text-[14px] font-semibold text-white">
+          <div key={group.label} className="min-w-0 space-y-3">
+            <h2 className="text-base font-semibold text-white">
               {group.label}
             </h2>
         
-            <div className="flex gap-1.5 overflow-x-auto pb-1">
+            <div className="flex flex-wrap gap-2">
               {group.options.map((option) => (
                 <button
                   key={option}
                   type="button"
                   onClick={() => group.setValue(option)}
                   aria-pressed={group.value === option}
-                  className={`shrink-0 whitespace-nowrap rounded-full border px-2 py-1 text-[11px] leading-none transition-colors ${ 
+                  className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-2 text-xs leading-none transition-colors ${
                     group.value === option
                       ? 'border-[#D8BC77] bg-[#D8BC77] text-[#101722]'
                       : 'border-[#354353] bg-transparent text-[#E2E4E8] hover:border-[#D8BC77]'
@@ -123,7 +123,7 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
         ))}
       </div>
 
-      {/* 3. COSTUMES GRID VIEW - Matching PDF Page 2 */}
+      {/* 3. Costume grid */}
       <div>
         <div className={(selectedDynasty !== 'Tất cả' || selectedStyle !== 'Tất cả' || selectedGender !== 'Tất cả' || searchQuery) ? 'flex items-center justify-between mb-3' : ''}>
           <h2 className="sr-only">
@@ -160,11 +160,11 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5 xl:gap-6">
             {filteredCostumes.map((costume) => (
               <div
                 key={costume.id}
-                className="group flex flex-col overflow-hidden rounded-lg border border-[#354353] bg-[#0C1624] transition-colors hover:border-[#D8C18D]"
+                className="group min-w-0 flex flex-col overflow-hidden rounded-xl border border-[#354353] bg-[#0C1624] transition-colors hover:border-[#D8C18D]"
               >
                 <button
                   type="button"
@@ -192,27 +192,27 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
                   )}
                 </button>
                 
-                <div className="flex flex-1 flex-col gap-1 p-2">
+                <div className="flex flex-1 flex-col gap-2 p-2.5 sm:p-3 lg:p-4">
                   <button
                     type="button"
                     onClick={() => onSelectCostume(costume)}
-                    className="truncate text-left text-[13px] font-semibold uppercase leading-tight text-[#D8C18D] hover:text-white"
+                    className="line-clamp-2 min-h-[2.5em] text-left text-[13px] font-semibold uppercase leading-tight text-[#D8C18D] hover:text-white sm:text-sm lg:text-base"
                   >
                     {costume.name.replace(' (Tay Chẽn)', '')}
                   </button>
                 
-                  <div className="flex flex-wrap items-center gap-1 text-[9px] text-[#C3C6CC]">
+                  <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-[#C3C6CC]">
                     <span>{costume.dynasty === 'Chưa xác định' ? 'Đang bổ sung tư liệu' : 'Triều ' + costume.dynasty}</span>
-                    <span className="rounded-sm bg-[#D8C18D]/15 px-1 py-0.5 text-[7px] text-[#E7D6AF]">
+                    <span className="rounded bg-[#D8C18D]/15 px-1.5 py-1 text-[9px] text-[#E7D6AF]">
                       Cultural Card
                     </span>
                   </div>
                 
-                  <div className="mt-auto grid grid-cols-2 gap-1 pt-1">
+                  <div className="mt-auto grid grid-cols-1 gap-2 pt-2 min-[400px]:grid-cols-2">
                     <button
                       type="button"
                       onClick={() => onSelectCostume(costume)}
-                      className="whitespace-nowrap rounded-full border border-[#D8BC77] bg-[#D8BC77] px-1 py-1 text-[9px] leading-none text-[#101722] hover:bg-[#E7D6AF]"
+                      className="min-h-9 whitespace-nowrap rounded-full border border-[#D8BC77] bg-[#D8BC77] px-1 py-2 text-[10px] leading-none text-[#101722] hover:bg-[#E7D6AF] lg:text-xs"
                     >
                       Xem chi tiết
                     </button>
@@ -220,7 +220,7 @@ export const ExploreScreen: React.FC<ExploreScreenProps> = ({
                     <button
                       type="button"
                       onClick={() => onStartStylingWithCostume(costume)}
-                      className="whitespace-nowrap rounded-full border border-[#D8BC77] bg-transparent px-1 py-1 text-[9px] leading-none text-[#E7D6AF] hover:bg-[#D8BC77]/15"
+                      className="min-h-9 whitespace-nowrap rounded-full border border-[#D8BC77] bg-transparent px-1 py-2 text-[10px] leading-none text-[#E7D6AF] hover:bg-[#D8BC77]/15 lg:text-xs"
                     >
                       Phối đồ
                     </button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Header } from './components/common/Header';
+import { BackButton, Header } from './components/common/Header';
 import { HomeScreen } from './components/screens/HomeScreen';
 import { ExploreScreen } from './components/screens/ExploreScreen';
 import { CulturalDetailScreen } from './components/screens/CulturalDetailScreen';
@@ -70,8 +70,8 @@ async function referencePhoto(file: string, crop: [number, number, number, numbe
 
 export default function App() {
   // Navigation State
-  const [currentTab, setCurrentTab] = useState<string>('home');
-  const [previousTab, setPreviousTab] = useState<string>('home');
+  const [navigationStack, setNavigationStack] = useState<string[]>(['home']);
+  const currentTab = navigationStack[navigationStack.length - 1];
 
   // User Authentication State
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
@@ -125,12 +125,16 @@ export default function App() {
 
   // Navigation handler
   const handleNavigate = (tab: string, costumeId?: string) => {
-    setPreviousTab(currentTab);
     if (costumeId) {
       const found = CULTURAL_COSTUMES.find(c => c.id === costumeId);
       if (found) setSelectedCostume(found);
     }
-    setCurrentTab(tab);
+    setNavigationStack(stack => stack[stack.length - 1] === tab ? stack : [...stack, tab]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBack = () => {
+    setNavigationStack(stack => stack.length > 1 ? stack.slice(0, -1) : ['home']);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -332,7 +336,7 @@ export default function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setCurrentTab('home');
+    setNavigationStack(['home']);
   };
 
   const handleCreateLookbookAlbum = (album: LookbookAlbum) => {
@@ -419,6 +423,8 @@ export default function App() {
               ? 'max-w-[1024px] px-0 pt-0'
             : currentTab === 'home'
               ? 'max-w-7xl px-4 sm:px-[5%] pt-3.5'
+            : currentTab === 'explore'
+              ? 'max-w-[1440px] px-4 sm:px-6 lg:px-10 xl:px-12 pt-6'
               : 'max-w-7xl px-4 sm:px-6 lg:px-8 pt-6'
         }`}
       >
@@ -432,17 +438,20 @@ export default function App() {
 
         {/* SCREEN 2: Explore (Khám phá - PDF Page 2) */}
         {currentTab === 'explore' && (
-          <ExploreScreen
-            onSelectCostume={handleSelectCostume}
-            onStartStylingWithCostume={handleStartStylingFromCulture}
-          />
+          <>
+            <div className="mb-4"><BackButton onBack={handleBack} /></div>
+            <ExploreScreen
+              onSelectCostume={handleSelectCostume}
+              onStartStylingWithCostume={handleStartStylingFromCulture}
+            />
+          </>
         )}
 
         {/* SCREEN 3: Cultural Detail (Chi tiết Việt phục - PDF Page 3) */}
         {currentTab === 'cultural_detail' && (
           <CulturalDetailScreen
             costume={selectedCostume}
-            onBack={() => handleNavigate(previousTab === 'cultural_detail' ? 'explore' : previousTab)}
+            onBack={handleBack}
             onStartStyling={handleStartStylingFromCulture}
           />
         )}
@@ -450,7 +459,7 @@ export default function App() {
         {/* SCREEN 4: Setup Stylist (Thiết lập phối đồ - PDF Page 4) */}
         {currentTab === 'stylist_setup' && (
           <SetupStylistScreen
-            onBack={() => handleNavigate('home')}
+            onBack={handleBack}
             initialCostume={selectedCostume}
             aiStatus={aiStatus}
             onRefreshAI={refreshAIStatus}
@@ -462,7 +471,7 @@ export default function App() {
         {/* SCREEN 5: Outfit Builder (AI Gợi ý & Tùy chỉnh Outfit - PDF Page 5) */}
         {currentTab === 'outfit_builder' && (
           <OutfitBuilderScreen
-            onBack={() => handleNavigate('stylist_setup')}
+            onBack={handleBack}
             initialOutfit={currentOutfit}
             aiExplanation={stylistExplanation}
             initialConfig={{
@@ -484,14 +493,14 @@ export default function App() {
             onAnalyze={handleAnalyzeOutfit}
             onAutoFix={handleAutoFixCulturalConflicts}
             onProceedAnyway={handleProceedAfterCulturalCheck}
-            onBackToBuilder={() => handleNavigate('outfit_builder')}
+            onBackToBuilder={handleBack}
           />
         )}
 
         {/* SCREEN 7: Try-On (Tải ảnh thử đồ - PDF Page 7) */}
         {currentTab === 'tryon' && (
           <TryOnScreen
-            onBack={() => handleNavigate('outfit_builder')}
+            onBack={handleBack}
             aiStatus={aiStatus}
             onRefreshAI={refreshAIStatus}
             onExecuteTryOn={handleGeminiTryOn}
@@ -502,6 +511,7 @@ export default function App() {
         {/* SCREEN 8: Try-On Result (Kết quả mặc thử ảo - PDF Page 8) */}
         {currentTab === 'tryon_result' && (
           <TryOnResultScreen
+            onBack={handleBack}
             outfit={currentOutfit}
             userImage={tryOnImage}
             generatedImage={tryOnResultImage}
@@ -515,7 +525,7 @@ export default function App() {
         {/* SCREEN 9: Lookbook (Lookbook cá nhân - PDF Page 9) */}
         {currentTab === 'lookbook' && (
           <LookbookScreen
-            onBack={() => handleNavigate('home')}
+            onBack={handleBack}
             onUpdateAlbum={(album) => setLookbooks(prev => prev.map(item => item.id === album.id ? album : item))}
             albums={lookbooks}
             onCreateAlbum={handleCreateLookbookAlbum}
@@ -530,7 +540,7 @@ export default function App() {
         {/* SCREEN 10: Profile & History (Hồ sơ & Lịch sử - PDF Page 10) */}
         {currentTab === 'profile' && (
           <ProfileHistoryScreen
-            onBack={() => handleNavigate('home')}
+            onBack={handleBack}
             onOpenAdmin={() => setIsAdminModalOpen(true)}
             user={userProfile}
             history={historyList}
@@ -553,8 +563,6 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 space-y-2">
           <div className="flex items-center justify-center gap-2 text-slate-400 font-medium">
             <span className="font-serif-culture text-amber-400">VietVibe</span>
-            <span>·</span>
-            <span>Việt Phục AI Stylist</span>
             <span>·</span>
             <span>Gìn giữ bản sắc di sản dân tộc</span>
           </div>

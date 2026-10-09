@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Bell, LogIn } from 'lucide-react';
+import { ArrowLeft, Search, Bell, LogIn } from 'lucide-react';
 import { type AIStatus } from '../../types/vietvibe';
 
 export const AIConnectionNotice: React.FC<{ status: AIStatus; onRefresh: () => void }> = ({ status, onRefresh }) => (
@@ -10,10 +10,24 @@ export const AIConnectionNotice: React.FC<{ status: AIStatus; onRefresh: () => v
 );
 
 export const ScreenBrand: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
-  <button type="button" className="vv-wordmark" onClick={onClick} aria-label="Về trang chủ">
+  <button type="button" className="vv-wordmark" onClick={onClick} aria-label="VietVibe">
     <span className="vv-mark" aria-hidden="true" />
-    <span>Việt Phục<small>AI Stylist</small></span>
+    <span>VietVibe</span>
   </button>
+);
+
+export const BackButton: React.FC<{ onBack: () => void }> = ({ onBack }) => (
+  <button type="button" className="vv-back" onClick={onBack}>
+    <ArrowLeft size={16} aria-hidden="true" />
+    <span>Quay lại</span>
+  </button>
+);
+
+export const ScreenNavigation: React.FC<{ onBack: () => void }> = ({ onBack }) => (
+  <div className="vv-screen-navigation">
+    <BackButton onBack={onBack} />
+    <ScreenBrand onClick={onBack} />
+  </div>
 );
 
 interface HeaderProps {
@@ -72,10 +86,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div className="leading-tight">
               <div className="font-serif-culture text-[20px] font-bold text-[#D8C18D]">
-                 Việt Phục
-              </div>
-              <div className="text-[12px] font-normal text-[#D8C18D]">
-                 AI Stylist
+                 VietVibe
               </div>
             </div>
           </button>

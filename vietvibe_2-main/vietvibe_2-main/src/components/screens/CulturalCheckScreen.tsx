@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { ScreenBrand, AIConnectionNotice } from '../common/Header';
+import { ScreenNavigation, AIConnectionNotice } from '../common/Header';
 import { CostumeImage, ReferenceImage } from '../common/CulturalVisual';
 import { CULTURAL_COSTUMES } from '../../data/mockData';
 import { type OutfitComponentSelection, type AIStatus, type CulturalAssessment } from '../../types/vietvibe';
@@ -37,7 +36,7 @@ export const CulturalCheckScreen: React.FC<CulturalCheckScreenProps> = ({ outfit
     finally { window.clearTimeout(timer); if (controller.current === request) setBusy(false); }
   };
   return <div className="vv-screen">
-    <div className="vv-topbar"><ScreenBrand onClick={onBackToBuilder}/><button className="vv-outline flex gap-1 items-center" onClick={onBackToBuilder}><ArrowLeft size={14}/>Tùy chỉnh bộ phối</button></div>
+    <div className="vv-topbar"><ScreenNavigation onBack={onBackToBuilder}/></div>
     <h1 className="text-center text-xl font-bold text-[#E9C66B] mb-6">● KIỂM TRA ĐỘ PHÙ HỢP VĂN HÓA (CULTURAL CHECK)</h1>
     <div className="vv-check-grid">
       <div className="vv-check-picture">

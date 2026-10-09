@@ -1,9 +1,9 @@
 import React, {useRef,useState} from 'react';
 import {UploadCloud,Image as ImageIcon,Upload,Lightbulb} from 'lucide-react';
-import {ScreenBrand,AIConnectionNotice} from '../common/Header';
+import {ScreenNavigation,AIConnectionNotice} from '../common/Header';
 import {type AIStatus} from '../../types/vietvibe';
 import {ReferenceImage} from '../common/CulturalVisual';
-interface TryOnScreenProps { onExecuteTryOn:(image:string,customAccessoryName?:string,accessoryImage?:string)=>Promise<void>; onPreviewTryOn:(image:string,customAccessoryName?:string)=>void; onBack?:()=>void; aiStatus:AIStatus; onRefreshAI:()=>void; }
+interface TryOnScreenProps { onExecuteTryOn:(image:string,customAccessoryName?:string,accessoryImage?:string)=>Promise<void>; onPreviewTryOn:(image:string,customAccessoryName?:string)=>void; onBack:()=>void; aiStatus:AIStatus; onRefreshAI:()=>void; }
 export const TryOnScreen:React.FC<TryOnScreenProps>=({onExecuteTryOn,onPreviewTryOn,onBack,aiStatus,onRefreshAI})=>{
  const [busy,setBusy]=useState(false);
  const [image,setImage]=useState<string|null>(null);
@@ -32,7 +32,7 @@ export const TryOnScreen:React.FC<TryOnScreenProps>=({onExecuteTryOn,onPreviewTr
  };
  return <div className="vv-screen">
   <div className="vv-tryon">
-   <div className="vv-tryon-header"><ScreenBrand onClick={onBack}/>
+   <div className="vv-tryon-header"><ScreenNavigation onBack={onBack}/>
    <div className="vv-centered-title"><h1>THỬ ĐỒ ẢO AI <span className="whitespace-nowrap">(AI TRY-ON)</span></h1><p>Tải ảnh của bạn để AI mặc thử Việt phục trực quan nhất</p></div></div>
    <div className="vv-upload-grid">
     <section><h2 className="font-semibold mb-2">Upload ảnh bản thân</h2>

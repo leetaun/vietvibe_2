@@ -1,11 +1,11 @@
 import React,{useRef,useState} from 'react';
 import {Bookmark,Share2,Download} from 'lucide-react';
-import {ScreenBrand} from '../common/Header';
+import {ScreenNavigation} from '../common/Header';
 import {ReferenceImage} from '../common/CulturalVisual';
 import {OutfitComponentSelection} from '../../types/vietvibe';
-interface TryOnResultScreenProps {outfit:OutfitComponentSelection;userImage?:string|null;generatedImage?:string|null;resultNote?:string;onSaveToLookbook:()=>void;onTryAgain:()=>void;isLoggedIn:boolean;}
+interface TryOnResultScreenProps {outfit:OutfitComponentSelection;userImage?:string|null;generatedImage?:string|null;resultNote?:string;onSaveToLookbook:()=>void;onTryAgain:()=>void;onBack:()=>void;isLoggedIn:boolean;}
 const SamplePortrait:React.FC<{className?:string;label:string}>=({className='',label})=><div className={'relative '+className} role="img" aria-label={label}><ReferenceImage file="result-reference.png" crop={[51,149,327,315]} className="absolute left-0 top-0 h-full w-[54.14%]"/><ReferenceImage file="result-reference.png" crop={[381,149,277,315]} className="absolute right-0 top-0 h-full w-[45.86%]"/></div>;
-export const TryOnResultScreen:React.FC<TryOnResultScreenProps>=({outfit,userImage,generatedImage,resultNote,onSaveToLookbook,onTryAgain,isLoggedIn})=>{
+export const TryOnResultScreen:React.FC<TryOnResultScreenProps>=({outfit,userImage,generatedImage,resultNote,onSaveToLookbook,onTryAgain,onBack,isLoggedIn})=>{
  const [position,setPosition]=useState(50);
  const [notice,setNotice]=useState('');
  const frame=useRef<HTMLDivElement>(null);
@@ -14,9 +14,9 @@ export const TryOnResultScreen:React.FC<TryOnResultScreenProps>=({outfit,userIma
  const downloadSample=()=>{
   const source=new window.Image();source.onload=()=>{const canvas=document.createElement('canvas');canvas.width=604;canvas.height=315;const context=canvas.getContext('2d');context?.drawImage(source,51,149,327,315,0,0,327,315);context?.drawImage(source,381,149,277,315,327,0,277,315);const link=document.createElement('a');link.download='VietVibe_anh_mau.png';link.href=canvas.toDataURL('image/png');link.click();};source.onerror=()=>setNotice('Không tải được ảnh mẫu.');source.src='/result-reference.png';
  };
- const share=async()=>{try{await navigator.clipboard.writeText('Bản phối ViệtVibe: '+outfit.mainGarment+' · '+outfit.headwear+' · '+outfit.footwear);setNotice('Đã sao chép thông tin bộ phối.');}catch{setNotice('Trình duyệt chưa cho phép sao chép.');}};
+ const share=async()=>{try{await navigator.clipboard.writeText('Bản phối VietVibe: '+outfit.mainGarment+' · '+outfit.headwear+' · '+outfit.footwear);setNotice('Đã sao chép thông tin bộ phối.');}catch{setNotice('Trình duyệt chưa cho phép sao chép.');}};
  return <div className="vv-screen vv-result">
-  <ScreenBrand onClick={onTryAgain}/>
+  <ScreenNavigation onBack={onBack}/>
   <div className="vv-centered-title"><h1>KẾT QUẢ MẶC THỬ ẢO</h1><p>Hình ảnh sau khi phối {outfit.mainGarment} &amp; phụ kiện</p><p className="text-[11px] text-[#777]">{generatedImage?resultNote||'Ảnh được tạo bằng Gemini.':'Bản minh họa giao diện · chưa có kết quả từ API try-on'}</p></div>
   <div className="vv-result-grid">
    <div>
