@@ -29,6 +29,7 @@ import {
   UserProfile
 } from './types/vietvibe';
 import { type AIStatus, type CulturalAssessment } from './types/vietvibe';
+import { prepareTryOnImage } from './utils/aiImages';
 
 async function callAI<T>(route: string, body: unknown, signal?: AbortSignal): Promise<T> {
   try {
@@ -267,7 +268,14 @@ export default function App() {
     }
     const costume = CULTURAL_COSTUMES.find(item => item.name === currentOutfit.mainGarment) || selectedCostume;
     const garmentImage = costume.image || await referencePhoto('explore-reference.png', [84, 200, 133, 137]);
-    const result = await callAI<{ image: string; note: string }>('try-on', { outfit: currentOutfit, personImage, garmentImage, accessoryImage });
+    const [preparedPerson, preparedGarment, preparedAccessory] = await Promise.all([
+      prepareTryOnImage(personImage),
+      prepareTryOnImage(garmentImage),
+      accessoryImage ? prepareTryOnImage(accessoryImage) : Promise.resolve(undefined),
+    ]);
+    const result = await callAI<{ image: string; note: string }>('try-on', {
+      outfit: currentOutfit, personImage: preparedPerson, garmentImage: preparedGarment, accessoryImage: preparedAccessory,
+    });
     setCurrentOutfit(currentOutfit);
     setTryOnImage(personImage); setTryOnResultImage(result.image); setTryOnResultNote(result.note);
     setUserProfile(previous => ({ ...previous, tryOnCount: previous.tryOnCount + 1 }));

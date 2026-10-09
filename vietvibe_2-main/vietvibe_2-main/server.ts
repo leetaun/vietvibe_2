@@ -16,7 +16,7 @@ class HttpError extends Error {
 }
 function settings(): Settings {
   const filename = path.join(root, '.env.local');
-  const local = existsSync(filename) ? parse(readFileSync(filename)) : {};
+  const local = process.env.VERCEL === '1' ? {} : existsSync(filename) ? parse(readFileSync(filename)) : {};
   return {
     key: (local.GEMINI_API_KEY || process.env.GEMINI_API_KEY || '').trim(),
     textModel: local.GEMINI_TEXT_MODEL || process.env.GEMINI_TEXT_MODEL || 'gemini-3.8-flash',
@@ -174,6 +174,10 @@ export function createApiApp(options: { client?: Client; settings?: () => Settin
         active++; calls++; acquired = true;
         const client = options.client || new GoogleGenAI({ apiKey: config.key });
         const result = await handler(req, client, config, controller.signal);
+        // Leave headroom below Vercel's 4.5 MB response payload limit.
+        if (process.env.VERCEL === '1' && Buffer.byteLength(JSON.stringify(result), 'utf8') > 4_000_000) {
+          throw new HttpError(502, 'Ảnh kết quả quá lớn để tải về. Bạn thử tạo ảnh lại nhé.');
+        }
         if (!res.destroyed) res.json(result);
       } catch (error) {
         const safe = publicError(error);
