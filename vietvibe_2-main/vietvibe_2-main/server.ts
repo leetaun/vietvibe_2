@@ -6,7 +6,7 @@ import { createServer as createHttpServer } from 'node:http';
 import { setTimeout as delay } from 'node:timers/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { OUTFIT_CHOICES, ACCESSORY_IDS, type OutfitComponentSelection, type CulturalAssessment } from './src/types/vietvibe';
+import { OUTFIT_CHOICES, ACCESSORY_IDS, type OutfitComponentSelection, type CulturalAssessment } from './src/types/vietvibe.ts';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 type Settings = { key: string; textModel: string; imageModel: string };
