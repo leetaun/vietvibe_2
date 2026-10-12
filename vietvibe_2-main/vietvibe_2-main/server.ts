@@ -104,18 +104,20 @@ function errorDetails(error: unknown) {
   visit(error);
   return { status, networkCodes: [...new Set(networkCodes)], name: String(value.name || '') };
 }
-// A single retry for text requests tolerates intermittent transport failures.
+// Bounded exponential backoff with jitter tolerates temporary text service failures.
 // Key, billing, quota, certificate and validation errors require user action.
 async function retryText<T>(request: () => Promise<T>, signal: AbortSignal): Promise<T> {
-  try { return await request(); }
-  catch (error) {
-    const details = errorDetails(error);
-    const transientCodes = ['ECONNRESET', 'ECONNREFUSED', 'EPIPE', 'ETIMEDOUT', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_SOCKET', 'UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT'];
-    const transportFailure = !Number.isFinite(details.status) && (details.networkCodes.some(code => transientCodes.includes(code)) || (details.name === 'APIConnectionError' && details.networkCodes.length === 0));
-    const transient = [500, 502, 503, 504].includes(details.status) || transportFailure;
-    if (signal.aborted || !transient) throw error;
-    await delay(1000, undefined, { signal });
-    return request();
+  for (let attempt = 0; ; attempt++) {
+    signal.throwIfAborted();
+    try { return await request(); }
+    catch (error) {
+      const details = errorDetails(error);
+      const transientCodes = ['ECONNRESET', 'ECONNREFUSED', 'EPIPE', 'ETIMEDOUT', 'UND_ERR_CONNECT_TIMEOUT', 'UND_ERR_SOCKET', 'UND_ERR_HEADERS_TIMEOUT', 'UND_ERR_BODY_TIMEOUT'];
+      const transportFailure = !Number.isFinite(details.status) && (details.networkCodes.some(code => transientCodes.includes(code)) || (details.name === 'APIConnectionError' && details.networkCodes.length === 0));
+      const transient = [500, 502, 503, 504].includes(details.status) || transportFailure;
+      if (signal.aborted || !transient || attempt >= 3) throw error;
+      await delay(1000 * 2 ** attempt + Math.floor(Math.random() * 500), undefined, { signal });
+    }
   }
 }
 function publicError(error: unknown): HttpError {
